@@ -1,0 +1,170 @@
+@import 'tailwindcss';
+/* Layer components: utilitas Tailwind tetap menang atas gaya Leaflet, aturan !important Leaflet tetap berlaku. */
+@import 'leaflet/dist/leaflet.css' layer(components);
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../js/**/*.jsx';
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, sans-serif;
+    --shadow-card: 0 1px 3px rgb(15 23 42 / 0.04), 0 1px 2px rgb(15 23 42 / 0.02);
+    --shadow-pop: 0 12px 32px -12px rgb(15 23 42 / 0.18);
+}
+
+@layer base {
+    html {
+        -webkit-tap-highlight-color: transparent;
+        scrollbar-gutter: stable;
+    }
+
+    /* Tailwind v4: border default = currentColor; samakan dengan garis desain. */
+    *,
+    ::before,
+    ::after {
+        border-color: var(--color-slate-200);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-red-600);
+        outline-offset: 2px;
+    }
+
+    /* Angka rata dan konsisten untuk data tabular. */
+    table,
+    input[type='number'],
+    input[type='date'] {
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Spinner angka bawaan browser terlalu bising di input rupiah. */
+    input[type='number']::-webkit-outer-spin-button,
+    input[type='number']::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type='number'] {
+        -moz-appearance: textfield;
+    }
+
+    /* Scrollbar halus (Firefox + WebKit). */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-slate-300) transparent;
+    }
+
+    *::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    *::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background: var(--color-slate-300);
+        border-radius: 9999px;
+        border: 2px solid transparent;
+        background-clip: content-box;
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+        background: var(--color-slate-400);
+        background-clip: content-box;
+    }
+
+    ::selection {
+        background: rgb(220 38 38 / 0.15);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        ::before,
+        ::after {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+}
+
+@layer components {
+    /* Jaring pengaman preflight Tailwind v4 (img { max-width: 100% }) agar ubin & marker tidak terpotong. */
+    .leaflet-container img,
+    .leaflet-tile {
+        max-width: none !important;
+        max-height: none !important;
+    }
+
+    /* Stacking context sendiri: z-index internal Leaflet (400–1000) tidak menembus navbar/sidebar/toast. */
+    .leaflet-container {
+        z-index: 0;
+        isolation: isolate;
+        font-family: var(--font-sans);
+        background: var(--color-slate-100);
+    }
+
+    .leaflet-container a {
+        color: inherit;
+    }
+
+    .leaflet-control-zoom {
+        border: 0 !important;
+        box-shadow: var(--shadow-card) !important;
+        border-radius: 0.75rem;
+        overflow: hidden;
+    }
+
+    .leaflet-control-zoom a {
+        width: 2rem !important;
+        height: 2rem !important;
+        line-height: 2rem !important;
+        color: var(--color-slate-700) !important;
+        border-color: var(--color-slate-200) !important;
+    }
+
+    .leaflet-control-attribution {
+        font-size: 10px;
+        background: rgb(255 255 255 / 0.8) !important;
+        border-top-left-radius: 0.5rem;
+    }
+
+    .leaflet-popup-content-wrapper {
+        border-radius: 0.875rem;
+        box-shadow: var(--shadow-pop);
+        border: 1px solid var(--color-slate-200);
+    }
+
+    .leaflet-popup-content {
+        margin: 0.875rem 1rem;
+        font-size: 0.875rem;
+        line-height: 1.4;
+    }
+
+    .leaflet-popup-tip {
+        box-shadow: none;
+        border: 1px solid var(--color-slate-200);
+    }
+
+    .peta-marker span {
+        display: block;
+        width: 16px;
+        height: 16px;
+        border-radius: 9999px;
+        background: var(--color-slate-900);
+        border: 3px solid #fff;
+        box-shadow: 0 1px 4px rgb(15 23 42 / 0.35);
+    }
+
+    .peta-marker--kritis span {
+        background: var(--color-red-600);
+    }
+
+    .peta-marker--aktif span {
+        transform: scale(1.25);
+        box-shadow: 0 0 0 4px rgb(220 38 38 / 0.25);
+    }
+}
